@@ -54,14 +54,19 @@ def test_parse_auction_id(spider: AuctionsSpider):
     argnames=['expected_date', 'auction_status', 'text'],
     argvalues=[
         (
-            datetime(2023, 10, 2, 11, 0),
+            date(2023, 10, 2),
             AuctionStatus.OPEN,
             'Электронная площадка «ЭТП ГПБ» (www.etpgpb.ru), оператором которой является ООО «Электронная торговая площадка ГПБ». Дата — 2 октября 2023, в 11:00 (по московскому времени).',
         ),
         (
-            datetime(2022, 12, 26),
+            date(2022, 12, 26),
             AuctionStatus.CANCELED,
             '26 декабря 2022',
+        ),
+        (
+            date(2023, 6, 19),
+            AuctionStatus.OPEN,
+            'Электронная площадка «ЭТП ГПБ» (www.etpgpb.ru), оператором которой является ООО «Электронная торговая площадка ГПБ». Дата — 19 июня 2023 года, в 00:09 (время московское).',
         ),
     ],
 )

@@ -1,5 +1,5 @@
 import re
-from datetime import date, datetime
+from datetime import date
 
 import dateparser
 import scrapy
@@ -87,17 +87,19 @@ class AuctionsSpider(scrapy.Spider):
 
     def parse_auction_datetime(
         self, start_datetime_text: str, auction_status: AuctionStatus
-    ) -> datetime:
+    ) -> date:
         if auction_status is AuctionStatus.OPEN:
             auction_date = re.search(Patterns.auction_date, start_datetime_text).group(1)
             auction_time = re.search(Patterns.auction_time, start_datetime_text).group(1)
             auction_timezone = re.search(
                 Patterns.auction_timezone, start_datetime_text
             ).group(1)
-            auction_timezone
-            auction_datetime = dateparser.parse(' '.join([auction_date, auction_time]))
+            auction_timezone  # TODO c тайм зоной пока ничего не делаем, в аукционе может быть указано (по московскому времени) или (по местному времени), это проблема
+            auction_datetime = dateparser.parse(
+                ' '.join([auction_date, auction_time])
+            ).date()
         else:
-            auction_datetime = dateparser.parse(start_datetime_text)
+            auction_datetime = dateparser.parse(start_datetime_text).date()
         return auction_datetime
 
     def parse_deadline_date(self, deadline_text: str) -> date | None:
