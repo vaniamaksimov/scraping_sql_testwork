@@ -78,3 +78,25 @@ def test_parse_auction_datetime(
 ):
     result = spider.parse_auction_datetime(text, auction_status)
     assert result == expected_date
+
+
+@pytest.mark.parametrize(
+    argnames=['expected', 'text'],
+    argvalues=[
+        (135206.0, '135 206 руб. (сто тридцать пять тысяч двести шесть)'),
+        (130721.0, '130 721 (сто тридцать тысяч семьсот двадцать один)'),
+        (
+            108407370.0,
+            '108 407 370 (сто восемь миллионов четыреста семь тысяч триста семьдесят)',
+        ),
+        (75000.0, '75 000 (семьдесят пять тысяч)'),
+        (
+            1676594739.06,
+            '1 676 594 739,06 (один миллиард шестьсот семьдесят шесть миллионов пятьсот девяносто четыре тысячи семьсот тридцать девять рублей и 06 копеек)',
+        ),
+        (1.25, '1,25'),
+    ],
+)
+def test_parse_auction_fee(spider: AuctionsSpider, expected: float, text: str):
+    result = spider.parse_auction_fee(text)
+    assert result == expected

@@ -24,7 +24,11 @@ class AuctionsSpider(scrapy.Spider):
             auction_area = row.xpath(AuctionListLocators.row_auction_area).get().strip()
             auction_region = row.xpath(AuctionListLocators.row_auction_region).get()
             auction_status = AuctionStatus(
-                row.xpath(AuctionListLocators.row_auction_status).get()
+                row.xpath(AuctionListLocators.row_auction_status)
+                .get()
+                .strip()
+                .split()[0]
+                .removesuffix(',')  # На сайте есть аукцион со статусом <Закрыт, закрыт>
             )
             if auction_link:
                 yield response.follow(
@@ -109,5 +113,8 @@ class AuctionsSpider(scrapy.Spider):
         deadline_str = match.group(0)
         return dateparser.parse(deadline_str, settings={'DATE_ORDER': 'DMY'}).date()
 
-    def parse_auction_fee(self, auction_fee_text: str) -> int:
-        ...
+    def parse_auction_fee(self, auction_fee_text: str) -> float:
+        match = re.search(Patterns.auction_fee, auction_fee_text)
+        if not match:
+            return
+        return float(match.group(0).replace(' ', '').replace(',', '.'))

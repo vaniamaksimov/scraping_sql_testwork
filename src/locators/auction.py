@@ -1,6 +1,5 @@
+from dataclasses import dataclass
 from typing import assert_never
-
-from attr import dataclass
 
 from src.locators.base import BaseLocators
 from src.models.auction_status import AuctionStatus
