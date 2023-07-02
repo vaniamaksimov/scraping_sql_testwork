@@ -7,6 +7,11 @@ import scrapy
 
 
 class NedradvItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    auction_site_id = scrapy.Field()
+    auction_area = scrapy.Field()
+    auction_region = scrapy.Field()
+    auction_status = scrapy.Field()
+    auction_date = scrapy.Field()
+    auction_deadline = scrapy.Field()
+    auction_patricipation_fee = scrapy.Field()
+    auction_holder = scrapy.Field()
