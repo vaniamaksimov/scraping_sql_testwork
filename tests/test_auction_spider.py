@@ -1,7 +1,8 @@
-from datetime import date
+from datetime import date, datetime
 
 import pytest
 
+from src.models.auction_status import AuctionStatus
 from src.nedradv.spiders.auctions import AuctionsSpider
 
 
@@ -22,4 +23,53 @@ def test_parse_deadline_date(
     spider: AuctionsSpider, deadline_string: str, expected_date: date
 ):
     result = spider.parse_deadline_date(deadline_string)
+    assert result == expected_date
+
+
+@pytest.mark.parametrize(
+    argnames=['auction_status_string', 'expected_enum'],
+    argvalues=[
+        ('Аннулирован', AuctionStatus.VOIDED),
+        ('Закрыт', AuctionStatus.CLOSED),
+        ('Открыт', AuctionStatus.OPEN),
+        ('Отмена', AuctionStatus.CANCELED),
+        ('Перенос', AuctionStatus.TRANSFER),
+        ('Приостановлен', AuctionStatus.SUSPENDED),
+        ('нет сведений', AuctionStatus.NO_DATA),
+    ],
+)
+def test_parse_auction_status(auction_status_string: str, expected_enum: AuctionStatus):
+    result = AuctionStatus(auction_status_string)
+    assert result is expected_enum
+
+
+def test_parse_auction_id(spider: AuctionsSpider):
+    result = spider.parse_auction_id(
+        'https://nedradv.ru/nedradv/ru/find_aucc?obj=2daff8ecf59464b8d45e50117335aafb'
+    )
+    assert result == '2daff8ecf59464b8d45e50117335aafb'
+
+
+@pytest.mark.parametrize(
+    argnames=['expected_date', 'auction_status', 'text'],
+    argvalues=[
+        (
+            datetime(2023, 10, 2, 11, 0),
+            AuctionStatus.OPEN,
+            'Электронная площадка «ЭТП ГПБ» (www.etpgpb.ru), оператором которой является ООО «Электронная торговая площадка ГПБ». Дата — 2 октября 2023, в 11:00 (по московскому времени).',
+        ),
+        (
+            datetime(2022, 12, 26),
+            AuctionStatus.CANCELED,
+            '26 декабря 2022',
+        ),
+    ],
+)
+def test_parse_auction_datetime(
+    spider: AuctionsSpider,
+    expected_date: datetime,
+    auction_status: AuctionStatus,
+    text: str,
+):
+    result = spider.parse_auction_datetime(text, auction_status)
     assert result == expected_date
