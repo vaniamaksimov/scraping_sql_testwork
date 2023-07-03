@@ -1,16 +1,7 @@
-# Scrapy settings for nedradv project
-#
-# For simplicity, this file contains only settings considered important or
-# commonly used. You can find more settings consulting the documentation:
-#
-#     https://docs.scrapy.org/en/latest/topics/settings.html
-#     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-
 BOT_NAME = "nedradv"
 
-SPIDER_MODULES = ["nedradv.spiders"]
-NEWSPIDER_MODULE = "nedradv.spiders"
+SPIDER_MODULES = ["src.nedradv.spiders"]
+NEWSPIDER_MODULE = "src.nedradv.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -63,7 +54,8 @@ DOWNLOAD_DELAY = 2.5
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    "nedradv.pipelines.NedradvPipeline": 300,
+    # "nedradv.pipelines.NedradvPipeline": 300,
+    "src.nedradv.pipelines.NedradvPipeline": 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

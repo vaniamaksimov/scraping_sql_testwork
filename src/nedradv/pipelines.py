@@ -6,13 +6,12 @@
 import scrapy
 from itemadapter import ItemAdapter
 
-from src.core.database import db_session
-
 
 class NedradvPipeline:
-    async def process_item(self, item: scrapy.Item, spider: scrapy.Spider):
-        session = await db_session()
+    def process_item(self, item: scrapy.Item, spider: scrapy.Spider):
         parsed_item = ItemAdapter(item)
-        session
         parsed_item
+        print('*' * 50)
+        print('PIPELINE')
+        print('*' * 50)
         return item
