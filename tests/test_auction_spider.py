@@ -2,7 +2,7 @@ from datetime import date, datetime
 
 import pytest
 
-from src.models.auction_status import AuctionStatus
+from src.models.status import AuctionStatus
 from src.nedradv.spiders.auctions import AuctionsSpider
 
 

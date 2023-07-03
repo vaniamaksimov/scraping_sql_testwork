@@ -12,7 +12,9 @@ if TYPE_CHECKING:
 
 class AuctionHolder(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(String(settings.app.max_string_length))
+    name: Mapped[str] = mapped_column(
+        String(settings.app.max_string_length), unique=True, index=True
+    )
     auctions: Mapped[list['Auction']] = relationship(back_populates='auction_holder')
 
     def __init__(self, name: str, auctions: list['Auction'] = None):

@@ -1,8 +1,8 @@
 import pytest
 
 from src.locators.auction import AuctionListLocators, AuctionPageLocators
-from src.models.auction_status import AuctionStatus
-from src.utils.app_types import XPATH
+from src.models.status import AuctionStatus
+from src.utils.app_types import Xpath
 
 
 @pytest.mark.parametrize(
@@ -21,7 +21,7 @@ from src.utils.app_types import XPATH
     ],
 )
 def test_auction_page_locators_auction_date(
-    auction_status: AuctionStatus, expected_xpath: XPATH
+    auction_status: AuctionStatus, expected_xpath: Xpath
 ):
     xpath = AuctionPageLocators.auction_date(auction_status)
     assert xpath == expected_xpath

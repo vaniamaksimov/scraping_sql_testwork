@@ -6,7 +6,7 @@ import scrapy
 from scrapy.http.response.html import HtmlResponse
 
 from src.locators.auction import AuctionListLocators, AuctionPageLocators
-from src.models.auction_status import AuctionStatus
+from src.models.status import AuctionStatus
 from src.nedradv.items import NedradvItem
 from src.utils.re_patterns import Patterns
 

@@ -1,4 +1,4 @@
-from .auction_holder import AuctionHolder  # noqa
+from .holder import AuctionHolder  # noqa
 from .auction import Auction  # noqa
 from .region import Region  # noqa
 
