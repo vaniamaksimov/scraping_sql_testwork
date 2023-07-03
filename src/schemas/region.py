@@ -7,15 +7,22 @@ class RegionBase(BaseModel):
 
 
 class RegionCreate(RegionBase):
+    name: str
+
     class Config(RegionBase.Config):
         ...
 
 
 class RegionUpdate(RegionBase):
+    name: str
+
     class Config(RegionBase.Config):
         ...
 
 
 class RegionDB(BaseModel):
+    id: int
+    name: str
+
     class Config:
         orm_mode = True

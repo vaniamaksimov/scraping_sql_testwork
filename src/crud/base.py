@@ -30,7 +30,10 @@ class CrudBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         database_object: ModelType,
         schema: UpdateSchemaType,
     ) -> ModelType:
-        object_data = jsonable_encoder(database_object)
+        object_data = {
+            col.name: getattr(database_object, col.name)
+            for col in database_object.__table__.columns
+        }
         update_data = schema.dict(exclude_unset=True)
         for field_data_name in object_data:
             if field_data_name in update_data:
