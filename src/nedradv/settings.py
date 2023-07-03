@@ -54,7 +54,6 @@ DOWNLOAD_DELAY = 2.5
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    # "nedradv.pipelines.NedradvPipeline": 300,
     "src.nedradv.pipelines.NedradvPipeline": 300,
 }
 
