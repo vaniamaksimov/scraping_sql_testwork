@@ -42,17 +42,19 @@ class Auction(Base):
     def __init__(
         self,
         area: str,
+        site_id: str,
         status: AuctionStatus,
         auction_date: date,
         deadline: date,
         participation_fee: int,
-        auction_holder: 'AuctionHolder',
-        region: Optional['Region'] = None,
+        auction_holder_id: int,
+        region_id: int | None = None,
     ):
         self.area = area
+        self.site_id = site_id
         self.status = status
         self.auction_date = auction_date
         self.deadline = deadline
         self.participation_fee = participation_fee
-        self.auction_holder = auction_holder
-        self.region = region or None
+        self.auction_holder_id = auction_holder_id
+        self.region_id = region_id or None

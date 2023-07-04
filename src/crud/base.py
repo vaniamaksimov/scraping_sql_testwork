@@ -12,10 +12,10 @@ class CrudBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def __init__(self, model: ModelType) -> None:
         self.model = model
 
-    async def get(self, session: AsyncSession, **kwargs) -> list[ModelType]:
+    async def get(self, session: AsyncSession, **kwargs) -> ModelType:
         statement = self._make_statement(**kwargs)
         database_object = await session.execute(statement)
-        return database_object.scalars().all()
+        return database_object.scalars().first()
 
     async def create(self, session: AsyncSession, schema: CreateSchemaType) -> ModelType:
         database_object = self.model(**schema.dict())
