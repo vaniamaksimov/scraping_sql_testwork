@@ -13,15 +13,22 @@ class AuctionListLocators(BaseLocators):
     row_auction_area: Xpath = './td[2]/a/text()'
     row_auction_region: Xpath = './td[3]/a/text()'
     row_auction_status: Xpath = './td[4]/a/text()'
-    current_page: Xpath = '//a[@class="safeparam u-pagination-v1__item u-pagination-v1-4 g-rounded-50 g-pa-7-14 u-pagination-v1-4--active"]/text()'
-    next_page = (  # noqa:E731
-        lambda current_page: f'//a[@class="safeparam u-pagination-v1__item u-pagination-v1-4 g-rounded-50 g-pa-7-14 "][contains(text(), {int(current_page)+1})]/@href'
+    current_page: Xpath = (
+        '//a[@class="safeparam u-pagination-v1__item u-pagination-v1-4 '
+        'g-rounded-50 g-pa-7-14 u-pagination-v1-4--active"]/text()'
+    )
+    next_page = lambda current_page: (  # noqa:E731
+        '//a[@class="safeparam u-pagination-v1__item u-pagination-v1-4 g-rounded-50'
+        f' g-pa-7-14 "][contains(text(), {int(current_page)+1})]/@href'
     )
 
 
 @dataclass
 class AuctionPageLocators(BaseLocators):
-    auction_fee: Xpath = '//dt[contains(text(),"Взнос за участие в аукционе")]/following-sibling::dd/text()'
+    auction_fee: Xpath = (
+        '//dt[contains(text(),"Взнос за участие в аукционе")]'
+        '/following-sibling::dd/text()'
+    )
     auction_holder: Xpath = (
         '//dt[contains(text(),"Организатор")]/following-sibling::dd/text()'
     )
@@ -30,9 +37,15 @@ class AuctionPageLocators(BaseLocators):
     def auction_deadline_text(auction_status: AuctionStatus) -> Xpath:
         match auction_status:
             case AuctionStatus.OPEN:
-                return '//dt[contains(text(),"Срок подачи заявок")]/following-sibling::dd/text()'
+                return (
+                    '//dt[contains(text(),"Срок подачи заявок")]'
+                    '/following-sibling::dd/text()'
+                )
             case AuctionStatus.CLOSED:
-                return '//dt[contains(text(),"Приказ об утверждении")]/following-sibling::dd/text()'
+                return (
+                    '//dt[contains(text(),"Приказ об утверждении")]'
+                    '/following-sibling::dd/text()'
+                )
             case (
                 AuctionStatus.VOIDED
                 | AuctionStatus.CANCELED
@@ -40,7 +53,10 @@ class AuctionPageLocators(BaseLocators):
                 | AuctionStatus.SUSPENDED
                 | AuctionStatus.NO_DATA
             ):
-                return '//dt[contains(text(),"Приказ об отмене (переносе, аннулировании)")]/following-sibling::dd/text()'
+                return (
+                    '//dt[contains(text(),"Приказ об отмене (переносе, '
+                    'аннулировании)")]/following-sibling::dd/text()'
+                )
             case None:
                 raise ValueError
             case _ as unreachable:
@@ -50,7 +66,10 @@ class AuctionPageLocators(BaseLocators):
     def auction_date(auction_status: AuctionStatus) -> Xpath:
         match auction_status:
             case AuctionStatus.OPEN:
-                return '//dt[contains(text(),"Место и время проведения")]/following-sibling::dd/text()'
+                return (
+                    '//dt[contains(text(),"Место и время проведения")]'
+                    '/following-sibling::dd/text()'
+                )
             case (
                 AuctionStatus.VOIDED
                 | AuctionStatus.CLOSED

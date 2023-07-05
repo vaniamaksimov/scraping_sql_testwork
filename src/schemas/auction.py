@@ -2,10 +2,7 @@ from datetime import date
 
 from pydantic import BaseModel, Extra
 
-from src.models.holder import AuctionHolder
 from src.models.status import AuctionStatus
-from src.schemas.holder import HolderDB
-from src.schemas.region import RegionDB
 
 
 class AuctionBase(BaseModel):
@@ -20,10 +17,10 @@ class AuctionCreate(AuctionBase):
     region_id: int | None = None
     status: AuctionStatus
     auction_date: date
-    deadline: date
-    participation_fee: float
+    deadline: date | None = None
+    participation_fee: float | None = None
 
-    auction_holder_id: int
+    auction_holder_id: int | None = None
 
     class Config(AuctionBase.Config):
         ...
@@ -36,10 +33,10 @@ class AuctionUpdate(AuctionBase):
     region_id: int | None = None
     status: AuctionStatus
     auction_date: date
-    deadline: date
-    participation_fee: float
+    deadline: date | None = None
+    participation_fee: float | None = None
 
-    auction_holder_id: int
+    auction_holder_id: int | None = None
 
     class Config(AuctionBase.Config):
         ...
@@ -52,9 +49,9 @@ class AuctionDB(BaseModel):
     region_id: int | None
     status: AuctionStatus
     auction_date: date
-    deadline: date
-    participation_fee: float
-    auction_holder_id: int
+    deadline: date | None
+    participation_fee: float | None
+    auction_holder_id: int | None
 
     class Config:
         orm_mode = True

@@ -29,8 +29,8 @@ class Auction(Base):
 
     status: Mapped[AuctionStatus] = mapped_column(Enum(AuctionStatus))
     auction_date: Mapped[date] = mapped_column(Date)
-    deadline: Mapped[date] = mapped_column(Date)
-    participation_fee: Mapped[float] = mapped_column(Float)
+    deadline: Mapped[date] = mapped_column(Date, nullable=True)
+    participation_fee: Mapped[float] = mapped_column(Float, nullable=True)
 
     auction_holder_id: Mapped[int] = mapped_column(
         ForeignKey('auctionholder.id', name='fk_auction_asuctionholder')
@@ -45,9 +45,9 @@ class Auction(Base):
         site_id: str,
         status: AuctionStatus,
         auction_date: date,
-        deadline: date,
-        participation_fee: int,
         auction_holder_id: int,
+        participation_fee: float | None = None,
+        deadline: date | None = None,
         region_id: int | None = None,
     ):
         self.area = area
@@ -57,4 +57,4 @@ class Auction(Base):
         self.deadline = deadline
         self.participation_fee = participation_fee
         self.auction_holder_id = auction_holder_id
-        self.region_id = region_id or None
+        self.region_id = region_id

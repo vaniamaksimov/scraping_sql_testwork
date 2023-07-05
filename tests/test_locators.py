@@ -10,7 +10,8 @@ from src.utils.app_types import Xpath
     argvalues=[
         (
             AuctionStatus.OPEN,
-            '//dt[contains(text(),"Место и время проведения")]/following-sibling::dd/text()',
+            '//dt[contains(text(),"Место и время проведения")]'
+            '/following-sibling::dd/text()',
         ),
         (AuctionStatus.VOIDED, '//h1/text()[string-length() > 1]'),
         (AuctionStatus.CLOSED, '//h1/text()[string-length() > 1]'),
@@ -30,6 +31,6 @@ def test_auction_page_locators_auction_date(
 def test_auction_list_locators_next_page():
     xpath = AuctionListLocators.next_page('1')
     assert (
-        xpath
-        == '//a[@class="safeparam u-pagination-v1__item u-pagination-v1-4 g-rounded-50 g-pa-7-14 "][contains(text(), 2)]/@href'
+        xpath == '//a[@class="safeparam u-pagination-v1__item u-pagination-v1-4'
+        ' g-rounded-50 g-pa-7-14 "][contains(text(), 2)]/@href'
     )

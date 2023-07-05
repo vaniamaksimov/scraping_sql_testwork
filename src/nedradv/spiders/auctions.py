@@ -21,14 +21,15 @@ class AuctionsSpider(scrapy.Spider):
         for row in auctions_table:
             auction_link = row.xpath(AuctionListLocators.row_auction_link).get()
             auction_id = self.parse_auction_id(auction_link)
-            auction_area = row.xpath(AuctionListLocators.row_auction_area).get().strip()
+            auction_area = row.xpath(AuctionListLocators.row_auction_area).get()
             auction_region = row.xpath(AuctionListLocators.row_auction_region).get()
             auction_status = AuctionStatus(
                 row.xpath(AuctionListLocators.row_auction_status)
                 .get()
                 .strip()
                 .split()[0]
-                .removesuffix(',')  # На сайте есть аукцион со статусом <Закрыт, закрыт>
+                .removeprefix(',')
+                .removesuffix(',')
             )
             if auction_link:
                 yield response.follow(
@@ -36,7 +37,7 @@ class AuctionsSpider(scrapy.Spider):
                     callback=self.scrape_auction_data,
                     cb_kwargs=dict(
                         auction_id=auction_id,
-                        auction_area=auction_area,
+                        auction_area=auction_area.strip() if auction_area else None,
                         auction_region=auction_region.strip() if auction_region else None,
                         auction_status=auction_status,
                     ),
@@ -63,13 +64,11 @@ class AuctionsSpider(scrapy.Spider):
         start_datetime_text = (
             response.xpath(AuctionPageLocators.auction_date(auction_status)).get().strip()
         )
-        deadline_text = (
-            response.xpath(AuctionPageLocators.auction_deadline_text(auction_status))
-            .get()
-            .strip()
-        )
+        deadline_text = response.xpath(
+            AuctionPageLocators.auction_deadline_text(auction_status)
+        ).get()
         auction_fee_text = response.xpath(AuctionPageLocators.auction_fee).get()
-        auction_holder = response.xpath(AuctionPageLocators.auction_holder).get().strip()
+        auction_holder = response.xpath(AuctionPageLocators.auction_holder).get()
         data = {
             'auction_site_id': auction_id,
             'auction_area': auction_area,
@@ -78,9 +77,13 @@ class AuctionsSpider(scrapy.Spider):
             'auction_date': self.parse_auction_datetime(
                 start_datetime_text, auction_status
             ),
-            'auction_deadline': self.parse_deadline_date(deadline_text),
-            'auction_patricipation_fee': self.parse_auction_fee(auction_fee_text),
-            'auction_holder': auction_holder,
+            'auction_deadline': self.parse_deadline_date(deadline_text.strip())
+            if deadline_text
+            else None,
+            'auction_patricipation_fee': self.parse_auction_fee(auction_fee_text.strip())
+            if auction_fee_text
+            else None,
+            'auction_holder': auction_holder.strip() if auction_holder else None,
         }
         yield NedradvItem(data)
 
@@ -95,10 +98,6 @@ class AuctionsSpider(scrapy.Spider):
         if auction_status is AuctionStatus.OPEN:
             auction_date = re.search(Patterns.auction_date, start_datetime_text).group(1)
             auction_time = re.search(Patterns.auction_time, start_datetime_text).group(1)
-            auction_timezone = re.search(
-                Patterns.auction_timezone, start_datetime_text
-            ).group(1)
-            auction_timezone  # TODO c тайм зоной пока ничего не делаем, в аукционе может быть указано (по московскому времени) или (по местному времени), это проблема
             auction_datetime = dateparser.parse(
                 ' '.join([auction_date, auction_time])
             ).date()
