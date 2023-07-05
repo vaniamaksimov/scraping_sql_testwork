@@ -36,3 +36,20 @@
         - размах по времени разговора
 
 ## Установка и запуск проекта
+
+### Для запуска проекта необходимо:
+
+- Python версии 3.11
+- склонировать репозиторий консольной командой `git@github.com:vaniamaksimov/scraping_sql_testwork.git`
+- перейти в папку с проектом консольной командой `cd scraping_sql_testwork`
+- выполнить команду `mv .env.example .env`
+- установить зависимости с помощью poetry https://python-poetry.org/docs/basic-usage/ или воспользоваться пакетным менеджером pip, для этого:
+    - устанавливаем виртуальное окружение командой `python -m venv venv` или `python3 -m venv venv` на unix системах
+    - активируем виртуальное окружение командой `source venv/scripts/activate` или `source venv/bin/activate` на unix системах
+    - устанавливаем зависимости командой `pip install -r requirements.txt`
+- для поднятия базы данных я рекоменду воспользоваться Docker https://docs.docker.com/desktop/install/
+- команда для поднятия контейнера с базой данных: `docker run --name postgres -e POSTGRES_PASSWORD=postgres -d postgres`
+- применить миграции, для этого в корне проекта выполнить консольную команду `alembic upgrade head`
+- для запуска парсера в корне проекта выполнить консольную команду `scrapy crawl auctions`
+
+Парсер имеет настройку DOWNLOAD_DELAY = 2.5, для ускорения работы парсера следует уменьшить это число в разумных пределах.
