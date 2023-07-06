@@ -105,3 +105,33 @@ WHERE
   )
 ```
 В данном примере мы воспользовались возможностью подзапроса и селекта из него.
+
+Для получения списка звонков, где перерывы между звонками не более 5 минут подойдёт запрос:
+```
+SELECT
+  c1.phone_number,
+  c1.call_date,
+  c1.call_time
+FROM
+  Calls c1
+  JOIN Calls c2 ON c1.phone_number = c2.phone_number
+WHERE
+  c1.call_date = c2.call_date
+  AND c1.call_time < c2.call_time
+  AND c2.call_time - c1.call_time <= 5
+```
+
+Для получения списка, содержащего информацию по абонентам: количество звонков в день, средняя и медиана разговора в минутах и размаха по времени разговора подойдёт следующий запрос:
+```
+SELECT
+  COUNT(c.phone_number) AS calls_count,
+  AVG(c.call_time) AS average_call_time,
+  PERSENTILE_DISC(0.5) WITHIN GROUP (ORDER BY c.call_time) as median_call_time,
+  MAX(c.call_time) - MIN(c.call_time) as call_range
+FROM
+  Users s
+  JOIN Calls c ON s.phone_number = c.phone_number
+GROUP BY
+  s.full_name,
+  c.call_date
+```
